@@ -1,6 +1,3 @@
-# Disable sudo to speed up the build
-sudo: false
-
 # Set the build language to Python
 language: python
 
@@ -9,4 +6,4 @@ python: 3.7.2
 
 # Run the unit test
 script:
-  - python test.py
+  - python flaskr/test.py
