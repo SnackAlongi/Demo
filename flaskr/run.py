@@ -1,7 +1,9 @@
 from app import create_app
 from flask import render_template
 
-config_name = os.getenv('APP_SETTINGS')
+APP_SETTINGS = 'development'
+
+config_name = os.getenv(APP_SETTINGS)
 app = create_app(config_name)
 
 @app.route('/', defaults={'path': ''})
