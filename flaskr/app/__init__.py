@@ -6,7 +6,7 @@ from flask import request, jsonify, abort
 db = SQLAlchemy()
 
 def create_app(config_name):
-	from app.models import Ricetta
+	from app.models import Ricetta, Ingrediente
 	app = FlaskAPI(__name__,static_folder = "../../dist/static",
 					template_folder = "../../dist", instance_relative_config=True)
 	app.config.from_object(app_config[config_name])
@@ -43,5 +43,21 @@ def create_app(config_name):
 			response = jsonify(results)
 			response.status_code = 200
 			return response
+
+	@app.route('/ingrediente/', methods=['POST', 'GET'])
+	def ingredienti():
+		if request.method == "POST":
+			nome = str(request.data.get('NomeIngrediente', ''))
+
+			if nome:
+				ingrediente = Ingrediente(nome_ingrediente=nome)
+				ingrediente.save()
+				response = jsonify({
+					'NomeIngrediente': ingrediente.nome_ingrediente,
+				})
+				response.status_code = 201
+				return response
+		else:
+			pass
 
 	return app

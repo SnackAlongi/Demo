@@ -32,3 +32,7 @@ class Ingrediente(db.Model):
     def __str__(self):
         return self.nome_ingrediente
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
