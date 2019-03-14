@@ -11,5 +11,6 @@ htmlcov/
 dist/
 build/
 manage.py
+app/fixture.sql
 *.egg-info/
 *.db

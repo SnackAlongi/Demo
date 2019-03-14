@@ -30,7 +30,11 @@ class DatabaseTestCase(unittest.TestCase):
 		self.assertIn('Panino', str(res.data))
 
 	def test_mostra_ricette_create(self):
-		self.test_creazione_ricette()
+		ricetta = {'NomeRicetta': 'Pasta', 'Procedimento': 'fare pasta'}
+		self.client().post('/ricette/', data=ricetta)
+		ricetta = {'NomeRicetta': 'Panino', 'Procedimento': 'fare panino'}
+		self.client().post('/ricette/', data=ricetta)
+
 		res = self.client().get('/ricette/')
 		self.assertEqual(res.status_code, 200)
 		self.assertIn('Pasta', str(res.data))
