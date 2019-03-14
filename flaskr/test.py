@@ -14,9 +14,25 @@ class DatabaseTestCase(unittest.TestCase):
 			db.create_all()
 
 	def test_creazione_ricetta(self):
-		ricetta = { 'NomeRicetta' : 'Gallina', 'Procedimento' : 'fare arrosto' }
+		ricetta = { 'NomeRicetta': 'Gallina', 'Procedimento': 'fare arrosto' }
 		res = self.client().post('/ricette/', data=ricetta)
 		self.assertEqual(res.status_code, 201)
+
+	def test_creazione_ricette(self):
+		ricette = [{
+			'NomeRicetta': 'Pasta',
+			'Procedimento': 'fare pasta'
+		},
+		{
+			'NomeRicetta': 'Panino',
+			'Procedimento': 'fare panino'
+		}]
+		res = self.client().post('/ricette/', data=ricette)
+		self.asserEqual(res.status_code, 201)
+		self.assertIn('Gallina', str(res.data))
+		self.assertIn('Pasta', str(res.data))
+		self.assertIn('Panino', str(res.data))
+
 
 	def tearDown(self):
 		with self.app.app_context():
