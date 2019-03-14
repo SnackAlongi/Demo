@@ -14,8 +14,8 @@ def create_app(config_name):
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 	db.init_app(app)
 
-	@app.route('/ricette/', methods=['POST', 'GET'])
-	def ricette():
+	@app.route('/ricette/', methods=['POST'])
+	def aggiungi_ricetta():
 		if request.method == "POST":
 			nome = str(request.data.get('NomeRicetta', ''))
 			procedimento = str(request.data.get('Procedimento', ''))
@@ -30,6 +30,11 @@ def create_app(config_name):
 				response.status_code = 201
 				return response
 		else:
+			return abort(404)
+
+	@app.route('/ricette/', methods=['GET'])
+	def mostra_ricette():
+		if request.method == "GET":
 			ricette = Ricetta.get_all()
 			results = []
 
@@ -43,9 +48,11 @@ def create_app(config_name):
 			response = jsonify(results)
 			response.status_code = 200
 			return response
+		else:
+			return abort(404)
 
-	@app.route('/ingrediente/', methods=['POST', 'GET'])
-	def ingredienti():
+	@app.route('/ingrediente/', methods=['POST'])
+	def aggiungi_ingrediente():
 		if request.method == "POST":
 			nome = str(request.data.get('NomeIngrediente', ''))
 
@@ -58,6 +65,11 @@ def create_app(config_name):
 				response.status_code = 201
 				return response
 		else:
+			abort(404)
+
+	@app.route('/ingrediente/', methods=['GET'])
+	def mostra_ingredienti():
+		if request.method == "GET":
 			ingredienti = Ingrediente.get_all()
 			results = []
 
@@ -70,5 +82,7 @@ def create_app(config_name):
 			response = jsonify(results)
 			response.status_code = 200
 			return response
+		else:
+			abort(404)
 
 	return app
