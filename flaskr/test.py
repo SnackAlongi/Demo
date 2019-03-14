@@ -45,6 +45,17 @@ class DatabaseTestCase(unittest.TestCase):
 		res = self.client().post('/ingrediente/', data=ingrediente)
 		self.assertEqual(res.status_code, 201)
 
+	def test_creazione_ingredienti(self):
+		ingrediente = {'NomeIngrediente': 'Sugo'}
+		res = self.client().post('/ingrediente/', data=ingrediente)
+		self.assertEqual(res.status_code, 201)
+		self.assertIn('Sugo', str(res.data))
+
+		ingrediente = {'NomeIngrediente': 'Brodo'}
+		res = self.client().post('/ingrediente/', data=ingrediente)
+		self.assertEqual(res.status_code, 201)
+		self.assertIn('Brodo', str(res.data))
+
 	def tearDown(self):
 		with self.app.app_context():
 			db.session.remove()
