@@ -40,6 +40,11 @@ class DatabaseTestCase(unittest.TestCase):
 		self.assertIn('Pasta', str(res.data))
 		self.assertIn('Panino', str(res.data))
 
+	def test_creazione_ingrediente(self):
+		ingrediente = {'NomeIngrediente': 'Olio'}
+		res = self.client().post('/ingrediente/', data=ingrediente)
+		self.assertEqual(res.status_code, 201)
+
 	def tearDown(self):
 		with self.app.app_context():
 			db.session.remove()
