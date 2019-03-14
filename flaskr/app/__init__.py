@@ -18,8 +18,8 @@ def create_app(config_name):
 	def ricette():
 		if request.method == "POST":
 			nome = str(request.data.get('NomeRicetta', ''))
-			procedimento = str(request.data.get('Procedimento',''))
-			
+			procedimento = str(request.data.get('Procedimento', ''))
+
 			if nome and procedimento:
 				ricetta = Ricetta(nome_ricetta=nome, procedimento=procedimento)
 				ricetta.save()
@@ -30,8 +30,6 @@ def create_app(config_name):
 				response.status_code = 201
 				return response
 		else:
-			reponse = jsonify({'errore': 'errore'})
-			reponse.status_code = 404
-			return reponse
+			pass
 
 	return app

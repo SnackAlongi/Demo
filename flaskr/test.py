@@ -19,18 +19,14 @@ class DatabaseTestCase(unittest.TestCase):
 		self.assertEqual(res.status_code, 201)
 
 	def test_creazione_ricette(self):
-		ricette = [{
-			'NomeRicetta': 'Pasta',
-			'Procedimento': 'fare pasta'
-		},
-		{
-			'NomeRicetta': 'Panino',
-			'Procedimento': 'fare panino'
-		}]
-		res = self.client().post('/ricette/', data=ricette)
-		self.asserEqual(res.status_code, 201)
-		self.assertIn('Gallina', str(res.data))
+		ricetta = {'NomeRicetta': 'Pasta', 'Procedimento': 'fare pasta'}
+		res = self.client().post('/ricette/', data=ricetta)
+		self.assertEqual(res.status_code, 201)
 		self.assertIn('Pasta', str(res.data))
+
+		ricetta = {'NomeRicetta': 'Panino', 'Procedimento': 'fare panino'}
+		res = self.client().post('/ricette/', data=ricetta)
+		self.assertEqual(res.status_code, 201)
 		self.assertIn('Panino', str(res.data))
 
 
