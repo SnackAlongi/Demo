@@ -1,16 +1,37 @@
 from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
-
 from instance.config import app_config
+from flask import request, jsonify, abort
 
 db = SQLAlchemy()
 
 def create_app(config_name):
-    app = FlaskAPI(__name__,static_folder = "../../dist/static",
-             		template_folder = "../../dist", instance_relative_config=True)
-    app.config.from_object(app_config[config_name])
-    app.config.from_pyfile('config.py')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    db.init_app(app)
+	from app.models import Ricetta
+	app = FlaskAPI(__name__,static_folder = "../../dist/static",
+					template_folder = "../../dist", instance_relative_config=True)
+	app.config.from_object(app_config[config_name])
+	app.config.from_pyfile('config.py')
+	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+	db.init_app(app)
 
-    return app
+	@app.route('/ricette/', methods=['POST', 'GET'])
+	def ricette():
+		if request.method == "POST":
+			nome = str(request.data.get('NomeRicetta', ''))
+			procedimento = str(request.data.get('Procedimento',''))
+			
+			if nome and procedimento:
+				ricetta = Ricetta(nome_ricetta=nome, procedimento=procedimento)
+				ricetta.save()
+				response = jsonify({
+					'NomeRicetta': ricetta.nome_ricetta,
+					'Procedimento': ricetta.procedimento
+				})
+				response.status_code = 201
+				return response
+		else:
+			reponse = jsonify({'errore': 'errore'})
+			reponse.status_code = 404
+			return reponse
+
+	return app

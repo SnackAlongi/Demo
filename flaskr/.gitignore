@@ -5,9 +5,11 @@ migrations/
 
 .pytest_cache/
 .coverage
+.idea*
 htmlcov/
 
 dist/
 build/
+manage.py
 *.egg-info/
 *.db

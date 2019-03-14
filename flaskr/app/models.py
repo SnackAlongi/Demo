@@ -1,5 +1,5 @@
 from app import db
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 
 class Ricetta_Ingrediente(db.Model):
     __tablename__ = 'ricetta_ingrediente'
@@ -11,15 +11,19 @@ class Ricetta(db.Model):
     __tablename__ = 'ricetta'
     nome_ricetta = db.Column(db.String(80), primary_key=True)
     procedimento = db.Column(db.String(255))
-    ingrediente = db.relationship("Ricetta_Ingrediente", back_populates='ricetta')
+    #ingrediente = db.relationship("Ricetta_Ingrediente", back_populates='ricetta')
 
     def __str__(self):
         return self.nome_ricetta
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
 class Ingrediente(db.Model):
     __tablename__ = 'ingrediente'
     nome_ingrediente = db.Column(db.String(255), primary_key=True)
-    ricetta= db.relationship("Ricetta_Ingrediente", back_populates='ingrediente')
+    #ricetta= db.relationship("Ricetta_Ingrediente", back_populates='ingrediente')
 
     def __str__(self):
         return self.nome_ingrediente

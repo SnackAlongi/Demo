@@ -13,16 +13,15 @@ class DatabaseTestCase(unittest.TestCase):
 		with self.app.app_context():
 			db.create_all()
 
-	def test_creazione_ricette(self):
+	def test_creazione_ricetta(self):
 		ricetta = { 'NomeRicetta' : 'Gallina', 'Procedimento' : 'fare arrosto' }
 		res = self.client().post('/ricette/', data=ricetta)
 		self.assertEqual(res.status_code, 201)
 
 	def tearDown(self):
 		with self.app.app_context():
-			pass
-			#db.session.remove()
-			#db.drop_all()
+			db.session.remove()
+			db.drop_all()
 
 if __name__ == '__main__':
 	unittest.main()
