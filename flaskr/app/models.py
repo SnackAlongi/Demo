@@ -36,3 +36,6 @@ class Ingrediente(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    @staticmethod
+    def get_all():
+        return Ingrediente.query.all()

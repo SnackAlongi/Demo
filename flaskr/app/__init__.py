@@ -58,6 +58,17 @@ def create_app(config_name):
 				response.status_code = 201
 				return response
 		else:
-			pass
+			ingredienti = Ingrediente.get_all()
+			results = []
+
+			for ingrediente in ingredienti:
+				i = {
+					'NomeIngrediente': ingrediente.nome_ingrediente,
+				}
+				results.append(i)
+
+			response = jsonify(results)
+			response.status_code = 200
+			return response
 
 	return app

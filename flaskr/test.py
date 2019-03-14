@@ -57,10 +57,11 @@ class DatabaseTestCase(unittest.TestCase):
 		self.assertIn('Brodo', str(res.data))
 
 	def test_mostra_ingredienti_creati(self):
-		res = self.client().get('/ricette/')
+		self.test_creazione_ingredienti()
+		res = self.client().get('/ingrediente/')
 		self.assertEqual(res.status_code, 200)
-		self.assertIn('Pasta', str(res.data))
-		self.assertIn('Panino', str(res.data))
+		self.assertIn('Sugo', str(res.data))
+		self.assertIn('Brodo', str(res.data))
 
 	def tearDown(self):
 		with self.app.app_context():
