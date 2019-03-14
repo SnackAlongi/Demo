@@ -18,7 +18,9 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:////Users/manuelalongi/Progetti/Demo/flaskr/fixture.sql'
+    #SQLALCHEMY_DATABASE_URI = 'sqlite:////Users/manuelalongi/Progetti/Demo/flaskr/app/fixture.sql'
+    #SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///fixture.sql'
     DEBUG = True
 
 class StagingConfig(Config):
