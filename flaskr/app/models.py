@@ -20,6 +20,10 @@ class Ricetta(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    @staticmethod
+    def get_all():
+        return Ricetta.query.all()
+
 class Ingrediente(db.Model):
     __tablename__ = 'ingrediente'
     nome_ingrediente = db.Column(db.String(255), primary_key=True)

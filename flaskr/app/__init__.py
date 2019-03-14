@@ -30,6 +30,18 @@ def create_app(config_name):
 				response.status_code = 201
 				return response
 		else:
-			pass
+			ricette = Ricetta.get_all()
+			results = []
+
+			for ricetta in ricette:
+				r = {
+					'NomeRicetta': ricetta.nome_ricetta,
+					'Procedimento': ricetta.procedimento
+				}
+				results.append(r)
+
+			response = jsonify(results)
+			response.status_code = 200
+			return response
 
 	return app

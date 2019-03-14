@@ -29,6 +29,12 @@ class DatabaseTestCase(unittest.TestCase):
 		self.assertEqual(res.status_code, 201)
 		self.assertIn('Panino', str(res.data))
 
+	def test_mostra_ricette_create(self):
+		self.test_creazione_ricette()
+		res = self.client().get('/ricette/')
+		self.assertEqual(res.status_code, 200)
+		self.assertIn('Pasta', str(res.data))
+		self.assertIn('Panino', str(res.data))
 
 	def tearDown(self):
 		with self.app.app_context():
