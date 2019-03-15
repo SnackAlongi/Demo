@@ -80,14 +80,16 @@ class DatabaseTestCase(unittest.TestCase):
 		self.client().post('/ricette/', data={'NomeRicetta': 'Pasta', 'Procedimento': 'fare pasta con olio e sugo'})
 
 		res = self.client().post('/ricetta_ingredienti/',
-						   data={'NomeRicetta': 'Pasta', 'NomeIngrediente': 'Sugo'})
-		self.assertEqual(res.status_code, 200)
-		self.assertIn(['Pasta', 'Sugo'], str(res.data))
+						   data={'NomeRicetta': 'Pasta', 'NomeIngrediente': 'Sugo', 'Quantita': '2'})
+		self.assertEqual(200, res.status_code)
 
-		res = self.client().post('/aggiungi_ingrediente_a_ricetta/',
+		res = self.client().post('/ricetta_ingredienti/',
 						   data={'NomeRicetta': 'Pasta', 'NomeIngrediente': 'Olio'})
-		self.assertEqual(res.status_code, 200)
-		self.assertIn(['Pasta', 'Olio'], str(res.data))
+		self.assertEqual(200, res.status_code)
+
+		res = self.client().post('/ricetta_ingredienti/',
+								 data={'NomeRicetta': 'Capra', 'NomeIngrediente': 'Sesamo'})
+		self.assertEqual(404, res.status_code)
 
 	def tearDown(self):
 		with self.app.app_context():

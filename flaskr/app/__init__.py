@@ -6,7 +6,7 @@ from flask import request, jsonify, abort
 db = SQLAlchemy()
 
 def create_app(config_name):
-	from app.models import Ricetta, Ingrediente
+	from app.models import Ricetta, Ingrediente, Ricetta_Ingrediente
 	app = FlaskAPI(__name__,static_folder = "../../dist/static",
 					template_folder = "../../dist", instance_relative_config=True)
 	app.config.from_object(app_config[config_name])
@@ -100,4 +100,29 @@ def create_app(config_name):
 		else:
 			abort(404)
 
+	@app.route('/ricetta_ingredienti/', methods=['GET', 'POST'])
+	def aggiungi_e_mostra_ingredienti_di_ricetta():
+		if request.method == 'POST':
+			nomeRicetta = request.data.get('NomeRicetta')
+			nomeIngrediente = request.data.get('NomeIngrediente')
+			quantita = request.data.get('Quantita')
+
+			if Ricetta.get_ricetta(nomeRicetta) and Ingrediente.get_ingrediente(nomeIngrediente):
+				if quantita is None: quantita = 1
+				ricetta_ingrediente = Ricetta_Ingrediente(ricetta_id=nomeRicetta, ingrediente_id=nomeIngrediente, quantita=quantita)
+				ricetta_ingrediente.save()
+				response = jsonify({
+					'NomeRicetta': ricetta_ingrediente.ricetta_id,
+					'NomeIngrediente': ricetta_ingrediente.ingrediente_id,
+					'Quantita': ricetta_ingrediente.quantita
+				})
+				response.status_code = 200
+				return response
+
+			else:
+				abort(404, 'La ricetta o l''ingrediente non sono presenti nel db')
+
+		else:
+			#GET
+			abort(404)
 	return app

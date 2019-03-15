@@ -5,7 +5,11 @@ class Ricetta_Ingrediente(db.Model):
     __tablename__ = 'ricetta_ingrediente'
     ricetta_id = db.Column(db.Integer, db.ForeignKey('ricetta.nome_ricetta'), primary_key=True)
     ingrediente_id = db.Column(db.Integer, db.ForeignKey('ingrediente.nome_ingrediente'), primary_key=True)
-    quatita = db.Column(db.Integer())
+    quantita = db.Column(db.Integer())
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
 class Ricetta(db.Model):
     __tablename__ = 'ricetta'
@@ -43,3 +47,7 @@ class Ingrediente(db.Model):
     @staticmethod
     def get_all():
         return Ingrediente.query.all()
+
+    @staticmethod
+    def get_ingrediente(nome):
+        return Ingrediente.query.filter_by(nome_ingrediente = nome).first()
