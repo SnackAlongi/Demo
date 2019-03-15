@@ -1,4 +1,3 @@
-from flask import json
 from app import create_app, db
 
 import unittest
@@ -14,35 +13,35 @@ class DatabaseTestCase(unittest.TestCase):
 			db.create_all()
 
 	def test_creazione_ricetta(self):
-		ricetta = { 'NomeRicetta': 'Gallina', 'Procedimento': 'fare arrosto' }
-		res = self.client().post('/ricette/', data=ricetta)
+		ricetta = {'NomeRicetta': 'Gallina', 'Procedimento': 'fare arrosto'}
+		res = self.client().post('/ricetta/', data=ricetta)
 		self.assertEqual(res.status_code, 201)
 
 	def test_creazione_ricette(self):
 		ricetta = {'NomeRicetta': 'Pasta', 'Procedimento': 'fare pasta'}
-		res = self.client().post('/ricette/', data=ricetta)
+		res = self.client().post('/ricetta/', data=ricetta)
 		self.assertEqual(res.status_code, 201)
 		self.assertIn('Pasta', str(res.data))
 
 		ricetta = {'NomeRicetta': 'Panino', 'Procedimento': 'fare panino'}
-		res = self.client().post('/ricette/', data=ricetta)
+		res = self.client().post('/ricetta/', data=ricetta)
 		self.assertEqual(res.status_code, 201)
 		self.assertIn('Panino', str(res.data))
 
 	def test_mostra_ricette_create(self):
 		ricetta = {'NomeRicetta': 'Pasta', 'Procedimento': 'fare pasta'}
-		self.client().post('/ricette/', data=ricetta)
+		self.client().post('/ricetta/', data=ricetta)
 		ricetta = {'NomeRicetta': 'Panino', 'Procedimento': 'fare panino'}
-		self.client().post('/ricette/', data=ricetta)
+		self.client().post('/ricetta/', data=ricetta)
 
-		res = self.client().get('/ricette/')
+		res = self.client().get('/ricetta/')
 		self.assertEqual(res.status_code, 200)
 		self.assertIn('Pasta', str(res.data))
 		self.assertIn('Panino', str(res.data))
 
 	def test_mostra_ricetta_in_base_a_nome(self):
 		ricetta = {'NomeRicetta': 'Pasta', 'Procedimento': 'fare pasta'}
-		self.client().post('/ricette/', data=ricetta)
+		self.client().post('/ricetta/', data=ricetta)
 
 		nome = {'NomeRicetta': 'Pasta'}
 		res = self.client().post('/mostra/', data=nome)
@@ -77,7 +76,7 @@ class DatabaseTestCase(unittest.TestCase):
 		self.client().post('/ingrediente/', data={'NomeIngrediente': 'Olio'})
 		self.client().post('/ingrediente/', data={'NomeIngrediente': 'Brodo'})
 		self.client().post('/ingrediente/', data={'NomeIngrediente': 'Sugo'})
-		self.client().post('/ricette/', data={'NomeRicetta': 'Pasta', 'Procedimento': 'fare pasta con olio e sugo'})
+		self.client().post('/ricetta/', data={'NomeRicetta': 'Pasta', 'Procedimento': 'fare pasta con olio e sugo'})
 
 		res = self.client().post('/ricetta_ingredienti/',
 						   data={'NomeRicetta': 'Pasta', 'NomeIngrediente': 'Sugo', 'Quantita': '2'})

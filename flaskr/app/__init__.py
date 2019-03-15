@@ -14,7 +14,7 @@ def create_app(config_name):
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 	db.init_app(app)
 
-	@app.route('/ricette/', methods=['POST'])
+	@app.route('/ricetta/', methods=['POST'])
 	def aggiungi_ricetta():
 		if request.method == "POST":
 			nome = str(request.data.get('NomeRicetta', ''))
@@ -32,7 +32,7 @@ def create_app(config_name):
 		else:
 			return abort(404)
 
-	@app.route('/ricette/', methods=['GET'])
+	@app.route('/ricetta/', methods=['GET'])
 	def mostra_ricette():
 		if request.method == "GET":
 			ricette = Ricetta.get_all()
@@ -55,7 +55,7 @@ def create_app(config_name):
 	def mostra_ricetta():
 		if request.method == 'POST':
 			nome = request.data.get('NomeRicetta')
-			if nome:
+			if Ricetta.get_ricetta(nome):
 				ricetta = Ricetta.get_ricetta(nome)
 				response = jsonify({
 					'NomeRicetta': ricetta.nome_ricetta,
@@ -65,6 +65,9 @@ def create_app(config_name):
 				return response
 			else:
 				return abort(404)
+		else:
+			return abort(404)
+
 
 	@app.route('/ingrediente/', methods=['POST'])
 	def aggiungi_ingrediente():
@@ -100,7 +103,7 @@ def create_app(config_name):
 		else:
 			abort(404)
 
-	@app.route('/ricetta_ingredienti/', methods=['GET', 'POST'])
+	@app.route('/ricetta_ingredienti/', methods=['POST'])
 	def aggiungi_e_mostra_ingredienti_di_ricetta():
 		if request.method == 'POST':
 			nomeRicetta = request.data.get('NomeRicetta')
@@ -109,6 +112,7 @@ def create_app(config_name):
 
 			if Ricetta.get_ricetta(nomeRicetta) and Ingrediente.get_ingrediente(nomeIngrediente):
 				if quantita is None: quantita = 1
+
 				ricetta_ingrediente = Ricetta_Ingrediente(ricetta_id=nomeRicetta, ingrediente_id=nomeIngrediente, quantita=quantita)
 				ricetta_ingrediente.save()
 				response = jsonify({
@@ -134,7 +138,7 @@ def create_app(config_name):
 				return response
 
 			else:
-				abort(404, 'La ricetta o l''ingrediente non sono presenti nel db')
+				abort(404, 'La ricetta o l''ingrediente non sono presenti ')
 
 		else:
 			#GET
