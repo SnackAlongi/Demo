@@ -91,6 +91,20 @@ class DatabaseTestCase(unittest.TestCase):
 								 data={'NomeRicetta': 'Capra', 'NomeIngrediente': 'Sesamo'})
 		self.assertEqual(404, res.status_code)
 
+	def test_mostra_ingredienti_di_ricetta(self):
+		self.test_aggiungi_ingredienti_e_quantita_a_ricetta()
+		res = self.client().post('/ricetta_ingredienti/', data={'NomeRicetta': 'Pasta'})
+		self.assertEqual(200, res.status_code)
+		self.assertEqual([
+		{
+			'NomeIngrediente': 'Sugo',
+			'Quantita': '2'
+		},
+		{
+			'NomeIngrediente': 'Olio',
+			'Quantita': '1'
+		}], res.data)
+
 	def tearDown(self):
 		with self.app.app_context():
 			db.session.remove()

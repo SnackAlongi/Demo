@@ -119,6 +119,9 @@ def create_app(config_name):
 				response.status_code = 200
 				return response
 
+			elif Ricetta.get_ricetta(nomeRicetta) and Ingrediente.get_ingrediente(nomeIngrediente) is None:
+				pass
+
 			else:
 				abort(404, 'La ricetta o l''ingrediente non sono presenti nel db')
 
