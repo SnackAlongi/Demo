@@ -120,7 +120,18 @@ def create_app(config_name):
 				return response
 
 			elif Ricetta.get_ricetta(nomeRicetta) and Ingrediente.get_ingrediente(nomeIngrediente) is None:
-				pass
+				ingredienti = Ricetta_Ingrediente.get_ingredienti_di_ricetta(nomeRicetta)
+
+				results = []
+				for ingrediente in ingredienti:
+					i = {
+						'NomeIngrediente': ingrediente.ingrediente_id,
+						'Quantita': ingrediente.quantita
+					}
+					results.append(i)
+				response = jsonify(results)
+				response.status_code = 200
+				return response
 
 			else:
 				abort(404, 'La ricetta o l''ingrediente non sono presenti nel db')

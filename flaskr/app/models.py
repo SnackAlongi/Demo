@@ -11,6 +11,10 @@ class Ricetta_Ingrediente(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    @staticmethod
+    def get_ingredienti_di_ricetta(nome):
+        return Ricetta_Ingrediente.query.filter_by(ricetta_id=nome).all()
+
 class Ricetta(db.Model):
     __tablename__ = 'ricetta'
     nome_ricetta = db.Column(db.String(80), primary_key=True)
