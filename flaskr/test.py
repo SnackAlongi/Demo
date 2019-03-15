@@ -73,6 +73,22 @@ class DatabaseTestCase(unittest.TestCase):
 		self.assertIn('Sugo', str(res.data))
 		self.assertIn('Brodo', str(res.data))
 
+	def test_aggiungi_ingredienti_e_quantita_a_ricetta(self):
+		self.client().post('/ingrediente/', data={'NomeIngrediente': 'Olio'})
+		self.client().post('/ingrediente/', data={'NomeIngrediente': 'Brodo'})
+		self.client().post('/ingrediente/', data={'NomeIngrediente': 'Sugo'})
+		self.client().post('/ricette/', data={'NomeRicetta': 'Pasta', 'Procedimento': 'fare pasta con olio e sugo'})
+
+		res = self.client().post('/ricetta_ingredienti/',
+						   data={'NomeRicetta': 'Pasta', 'NomeIngrediente': 'Sugo'})
+		self.assertEqual(res.status_code, 200)
+		self.assertIn(['Pasta', 'Sugo'], str(res.data))
+
+		res = self.client().post('/aggiungi_ingrediente_a_ricetta/',
+						   data={'NomeRicetta': 'Pasta', 'NomeIngrediente': 'Olio'})
+		self.assertEqual(res.status_code, 200)
+		self.assertIn(['Pasta', 'Olio'], str(res.data))
+
 	def tearDown(self):
 		with self.app.app_context():
 			db.session.remove()
