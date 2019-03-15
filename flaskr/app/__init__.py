@@ -51,6 +51,21 @@ def create_app(config_name):
 		else:
 			return abort(404)
 
+	@app.route('/mostra/', methods=['POST'])
+	def mostra_ricetta():
+		if request.method == 'POST':
+			nome = request.data.get('NomeRicetta')
+			if nome:
+				ricetta = Ricetta.get_ricetta(nome)
+				response = jsonify({
+					'NomeRicetta': ricetta.nome_ricetta,
+					'Procedimento': ricetta.procedimento
+				})
+				response.status_code = 200
+				return response
+			else:
+				return abort(404)
+
 	@app.route('/ingrediente/', methods=['POST'])
 	def aggiungi_ingrediente():
 		if request.method == "POST":

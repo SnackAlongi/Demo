@@ -24,6 +24,10 @@ class Ricetta(db.Model):
     def get_all():
         return Ricetta.query.all()
 
+    @staticmethod
+    def get_ricetta(nome):
+        return Ricetta.query.filter_by(nome_ricetta = nome).first()
+
 class Ingrediente(db.Model):
     __tablename__ = 'ingrediente'
     nome_ingrediente = db.Column(db.String(255), primary_key=True)
