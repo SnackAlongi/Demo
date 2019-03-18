@@ -12,5 +12,5 @@ dist/
 build/
 manage.py
 app/fixture.sql
+app/develop.db
 *.egg-info/
-*.db

@@ -1,5 +1,5 @@
 from app import db
-#from flask_sqlalchemy import SQLAlchemy
+from flask_security import RoleMixin, UserMixin
 
 class Ricetta_Ingrediente(db.Model):
     __tablename__ = 'ricetta_ingrediente'
@@ -19,7 +19,6 @@ class Ricetta(db.Model):
     __tablename__ = 'ricetta'
     nome_ricetta = db.Column(db.String(80), primary_key=True)
     procedimento = db.Column(db.String(255))
-    #ingrediente = db.relationship("Ricetta_Ingrediente", back_populates='ricetta')
 
     def __str__(self):
         return self.nome_ricetta
@@ -39,7 +38,7 @@ class Ricetta(db.Model):
 class Ingrediente(db.Model):
     __tablename__ = 'ingrediente'
     nome_ingrediente = db.Column(db.String(255), primary_key=True)
-    #ricetta= db.relationship("Ricetta_Ingrediente", back_populates='ingrediente')
+
 
     def __str__(self):
         return self.nome_ingrediente
@@ -55,3 +54,28 @@ class Ingrediente(db.Model):
     @staticmethod
     def get_ingrediente(nome):
         return Ingrediente.query.filter_by(nome_ingrediente = nome).first()
+
+class RolesUsers(db.Model):
+    __tablename__ = 'roles_users'
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column('user_id', db.Integer(), db.ForeignKey('user.id'))
+    role_id = db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
+
+class Role(db.Model, RoleMixin):
+    __tablename__ = 'role'
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+class User(db.Model, UserMixin):
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True)
+    username = db.Column(db.String(255))
+    password = db.Column(db.String(100))
+    active = db.Column(db.Boolean())
+    roles = db.relationship('Role', secondary='roles_users',
+                         backref=db.backref('users', lazy='dynamic'))
+
+    def __str__(self):
+        return self.username
