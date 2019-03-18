@@ -6,12 +6,14 @@
         <hr><br><br>
         <form>
           Ricetta:<br>
-          <input type="text" name="Ricetta">
+          <input type="text" name="Ricetta" v-model="nomeRicetta" placeholder="ricetta">
           <br>
           Procedimento:<br>
-          <input type="text" name="Procedimento">
+          <input type="text" name="Procedimento" v-model="procedimento" placeholder="procedimento">
         </form>
-        <button type="button" class="btn btn-success btn-sm">Aggiungi Ricetta</button>
+        <button type="button" class="btn btn-success btn-sm" v-on:click="insertRicetta()" value="submit">
+          Aggiungi Ricetta
+        </button>
         <br><br>
         <table class="table table-hover">
           <thead>
@@ -39,21 +41,20 @@
 </template>
 <script>
 import axios from 'axios';
-
+var nomeRicetta = null;
+var procedimento = null;
 
 export default {
   data() {
     return {
       ricette: [],
-      aggiungiRicettaForm: {
-        NomeRicetta: ricetta,
-        Procedimento: 'fare la cotoletta',
-      },
+      nomeRicetta: '',
+      procedimento: '',
     };
   },
   methods: {
     getRicette() {
-      const path = 'http://localhost:5000/ricetta';
+      const path = 'http://localhost:5000/api/ricetta/';
       axios.get(path)
         .then((res) => {
           this.ricette = res.data;
@@ -63,12 +64,14 @@ export default {
           console.error(error);
         });
     },
-    insertRicette() {
-      const path = 'http://localhost:5000/ricetta';
-      axios.post(path, payload)
-        .then(() => {
-          this.getBooks();
+    insertRicetta() {
+      const path = 'http://localhost:5000/api/ricetta/';
+      axios.post(path,
+        {
+          NomeRicetta: this.nomeRicetta,
+          Procedimento: this.procedimento
         })
+        .then((response) => {})
         .catch((error) => {
           // eslint-disable-next-line
           console.log(error);

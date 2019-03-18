@@ -20,11 +20,11 @@ def create_app(config_name):
 	app.secret_key = os.urandom(24)
 	db.init_app(app)
 
-	@app.route('/ricetta/', methods=['POST'])
+	@app.route('/api/ricetta/', methods=['POST'])
 	def aggiungi_ricetta():
 		if request.method == "POST":
-			nome = str(request.data.get('NomeRicetta', ''))
-			procedimento = str(request.data.get('Procedimento', ''))
+			nome = str(request.json.get('NomeRicetta', ''))
+			procedimento = str(request.json.get('Procedimento', ''))
 
 			if nome and procedimento:
 				ricetta = Ricetta(nome_ricetta=nome, procedimento=procedimento)
@@ -38,7 +38,7 @@ def create_app(config_name):
 		else:
 			return abort(404)
 
-	@app.route('/ricetta/', methods=['GET'])
+	@app.route('/api/ricetta/', methods=['GET'])
 	def mostra_ricette():
 		if request.method == "GET":
 			ricette = Ricetta.get_all()
@@ -57,10 +57,10 @@ def create_app(config_name):
 		else:
 			return abort(404)
 
-	@app.route('/mostra/', methods=['POST'])
+	@app.route('/api/mostra/', methods=['POST'])
 	def mostra_ricetta():
 		if request.method == 'POST':
-			nome = request.data.get('NomeRicetta')
+			nome = request.json.get('NomeRicetta')
 			if Ricetta.get_ricetta(nome):
 				ricetta = Ricetta.get_ricetta(nome)
 				response = jsonify({
@@ -75,10 +75,10 @@ def create_app(config_name):
 			return abort(404)
 
 
-	@app.route('/ingrediente/', methods=['POST'])
+	@app.route('/api/ingrediente/', methods=['POST'])
 	def aggiungi_ingrediente():
 		if request.method == "POST":
-			nome = str(request.data.get('NomeIngrediente', ''))
+			nome = str(request.json.get('NomeIngrediente', ''))
 
 			if nome:
 				ingrediente = Ingrediente(nome_ingrediente=nome)
@@ -91,7 +91,7 @@ def create_app(config_name):
 		else:
 			abort(404)
 
-	@app.route('/ingrediente/', methods=['GET'])
+	@app.route('/api/ingrediente/', methods=['GET'])
 	def mostra_ingredienti():
 		if request.method == "GET":
 			ingredienti = Ingrediente.get_all()
@@ -109,12 +109,12 @@ def create_app(config_name):
 		else:
 			abort(404)
 
-	@app.route('/ricetta_ingredienti/', methods=['POST'])
+	@app.route('/api/ricetta_ingredienti/', methods=['POST'])
 	def aggiungi_e_mostra_ingredienti_di_ricetta():
 		if request.method == 'POST':
-			nomeRicetta = request.data.get('NomeRicetta')
-			nomeIngrediente = request.data.get('NomeIngrediente')
-			quantita = request.data.get('Quantita')
+			nomeRicetta = request.json.get('NomeRicetta')
+			nomeIngrediente = request.json.get('NomeIngrediente')
+			quantita = request.json.get('Quantita')
 
 			if Ricetta.get_ricetta(nomeRicetta) and Ingrediente.get_ingrediente(nomeIngrediente):
 				if quantita is None: quantita = 1
@@ -167,4 +167,4 @@ def create_security(app):
 def apply_views_and_security(app):
 	create_views(app)
 	create_security(app)
-	CORS(app)
+	CORS(app, resources={r"/*": {"origins": "*"}})
