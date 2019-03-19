@@ -11,7 +11,7 @@ with app.app_context():
 
 
 @app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
+#@app.route('/<path:path>')
 @login_required
 def catch_all(path):
     return render_template("index.html")
