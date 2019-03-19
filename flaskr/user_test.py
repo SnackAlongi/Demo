@@ -7,7 +7,7 @@ class TestUserModel(unittest.TestCase):
 
     def setUp(self):
         self.app = create_app(config_name="testing")
-        self.userdata_store = apply_views_and_security(self.app)
+        apply_views_and_security(self.app)
         self.client = self.app.test_client
 
         with self.app.app_context():
@@ -15,16 +15,19 @@ class TestUserModel(unittest.TestCase):
 
     def test_encode_auth_token(self):
         with self.app.app_context():
-            user = self.userdata_store.create_user(email='prova@gmail.com', password='password')
+            #user = self.userdata_store.create_user(email='prova@gmail.com', password='password')
+            user = User(email='prova@gmail.com', username='prova', password='password')
+            db.session.add(user)
             db.session.commit()
-            auth_token = User.encode_auth_token(user.email)
+            auth_token = user.encode_auth_token()
         self.assertTrue(isinstance(auth_token, bytes))
 
     def test_decode_auth_token(self):
         with self.app.app_context():
-            user = self.userdata_store.create_user(email='prova@gmail.com', password='password')
+            user = User(email='prova@gmail.com', username='prova', password='password')
+            db.session.add(user)
             db.session.commit()
-            auth_token = User.encode_auth_token(user.email)
+            auth_token = user.encode_auth_token()
         self.assertTrue(isinstance(auth_token, bytes))
         self.assertTrue(User.decode_auth_token(auth_token) == 'prova@gmail.com')
 

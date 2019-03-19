@@ -80,8 +80,7 @@ class User(db.Model, UserMixin):
     roles = db.relationship('Role', secondary='roles_users',
                          backref=db.backref('users', lazy='dynamic'))
 
-    @staticmethod
-    def encode_auth_token(user_id):
+    def encode_auth_token(self):
         """
         Generates the Auth Token
         :return: string
@@ -90,7 +89,7 @@ class User(db.Model, UserMixin):
             payload = {
                 'exp': datetime.utcnow() + timedelta(days=0, minutes=15, seconds=0),
                 'iat': datetime.utcnow(),
-                'sub': user_id
+                'sub': self.email
             }
             return jwt.encode(
                 payload,
