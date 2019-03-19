@@ -12,3 +12,4 @@ install: pip install -r flaskr/requirements.txt
 # Run the unit test
 script:
   - python flaskr/test.py
+  - python flaskr/user_test.py
