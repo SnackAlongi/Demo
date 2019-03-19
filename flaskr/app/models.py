@@ -1,8 +1,8 @@
 from app import db
 from instance.config import Config
 from flask_security import RoleMixin, UserMixin
-import jwt
 from datetime import datetime, timedelta
+import jwt
 
 class Ricetta_Ingrediente(db.Model):
     __tablename__ = 'ricetta_ingrediente'
