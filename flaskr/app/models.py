@@ -88,18 +88,32 @@ class User(db.Model, UserMixin):
         """
         try:
             payload = {
-                'exp': datetime.utcnow() + timedelta(days=0, seconds=5),
+                'exp': datetime.utcnow() + timedelta(days=0, minutes=15, seconds=0),
                 'iat': datetime.utcnow(),
                 'sub': user_id
             }
             return jwt.encode(
                 payload,
-                #self.app.config.get('SECRET_KEY'),
                 Config.SECRET,
                 algorithm='HS256'
             )
         except Exception as e:
             return e
+
+    @staticmethod
+    def decode_auth_token(auth_token):
+        """
+        Decodes the auth token
+        :param auth_token:
+        :return: integer|string
+        """
+        try:
+            payload = jwt.decode(auth_token, Config.SECRET)
+            return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid token. Please log in again.'
 
     def __str__(self):
         return self.username

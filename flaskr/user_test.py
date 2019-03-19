@@ -15,18 +15,18 @@ class TestUserModel(unittest.TestCase):
 
     def test_encode_auth_token(self):
         with self.app.app_context():
-            user = self.userdata_store.create_user(email="prova@gamil.com", password='password')
+            user = self.userdata_store.create_user(email='prova@gmail.com', password='password')
             db.session.commit()
             auth_token = User.encode_auth_token(user.email)
         self.assertTrue(isinstance(auth_token, bytes))
 
     def test_decode_auth_token(self):
         with self.app.app_context():
-            user = self.userdata_store.create_user(email="prova@gamil.com", password='password')
+            user = self.userdata_store.create_user(email='prova@gmail.com', password='password')
             db.session.commit()
             auth_token = User.encode_auth_token(user.email)
         self.assertTrue(isinstance(auth_token, bytes))
-        self.assertTrue(User.decode_auth_token(auth_token) == 1)
+        self.assertTrue(User.decode_auth_token(auth_token) == 'prova@gmail.com')
 
     def tearDown(self):
         with self.app.app_context():
