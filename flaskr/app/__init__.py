@@ -153,9 +153,11 @@ def create_app(config_name):
 
 def create_views(app):
 	from app.models import User, Role
+	from app.auth.views import auth_blueprint
 	admin = Admin(app, name='Gestione chef', template_mode='bootstrap3')
 	admin.add_views(ModelView(User, db.session))
 	admin.add_views(ModelView(Role, db.session))
+	app.register_blueprint(auth_blueprint)
 	return admin
 
 def create_security(app):
