@@ -1,5 +1,8 @@
 from app import db
+from instance.config import Config
 from flask_security import RoleMixin, UserMixin
+import jwt
+from datetime import datetime, timedelta
 
 class Ricetta_Ingrediente(db.Model):
     __tablename__ = 'ricetta_ingrediente'
@@ -76,6 +79,27 @@ class User(db.Model, UserMixin):
     active = db.Column(db.Boolean())
     roles = db.relationship('Role', secondary='roles_users',
                          backref=db.backref('users', lazy='dynamic'))
+
+    @staticmethod
+    def encode_auth_token(user_id):
+        """
+        Generates the Auth Token
+        :return: string
+        """
+        try:
+            payload = {
+                'exp': datetime.utcnow() + timedelta(days=0, seconds=5),
+                'iat': datetime.utcnow(),
+                'sub': user_id
+            }
+            return jwt.encode(
+                payload,
+                #self.app.config.get('SECRET_KEY'),
+                Config.SECRET,
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
 
     def __str__(self):
         return self.username

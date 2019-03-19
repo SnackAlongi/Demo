@@ -162,9 +162,10 @@ def create_security(app):
 	from app.models import User, Role
 	user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 	security = Security(app, user_datastore)
-	return security
+	return user_datastore
 
 def apply_views_and_security(app):
 	create_views(app)
-	create_security(app)
+	user_datastore = create_security(app)
 	CORS(app, resources={r"/*": {"origins": "*"}})
+	return user_datastore
