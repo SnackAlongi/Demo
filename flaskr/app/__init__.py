@@ -1,10 +1,10 @@
 import os
+
 from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
 from instance.config import app_config
-from flask import request, jsonify, abort
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
+from flask import request, jsonify, abort, url_for
+from flask_admin import Admin, helpers as admin_helpers
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_cors import CORS
 
@@ -17,10 +17,10 @@ def create_app(config_name):
 	app.config.from_object(app_config[config_name])
 	app.config.from_pyfile('config.py')
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-	app.secret_key = os.urandom(24)
 	db.init_app(app)
 
 	@app.route('/api/ricetta/', methods=['POST'])
+	#@auth_required('token')
 	def aggiungi_ricetta():
 		if request.method == "POST":
 			nome = str(request.json.get('NomeRicetta', ''))
@@ -152,20 +152,30 @@ def create_app(config_name):
 	return app
 
 def create_views(app):
-	from app.models import User, Role
-	admin = Admin(app, name='Gestione chef', template_mode='bootstrap3')
-	admin.add_views(ModelView(User, db.session))
-	admin.add_views(ModelView(Role, db.session))
+	from app.models import User, Role, Ricetta, Ingrediente
+	from app.view import MyModelView
+	admin = Admin(app, name='Gestione chef', base_template='my_master.html', template_mode='bootstrap3')
+	admin.add_views(MyModelView(User, db.session))
+	admin.add_views(MyModelView(Role, db.session))
 	return admin
 
 def create_security(app):
 	from app.models import User, Role
 	user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 	security = Security(app, user_datastore)
-	return user_datastore
+
+	return security
 
 def apply_views_and_security(app):
-	create_views(app)
-	user_datastore = create_security(app)
+	admin = create_views(app)
+	security = create_security(app)
+
+	@security.context_processor
+	def security_context_processor():
+		return dict(
+			admin_base_template=admin.base_template,
+			admin_view=admin.index_view,
+			h=admin_helpers,
+			get_url=url_for
+		)
 	CORS(app, resources={r"/*": {"origins": "*"}})
-	return user_datastore

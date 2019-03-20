@@ -15,7 +15,6 @@ class TestUserModel(unittest.TestCase):
 
     def test_encode_auth_token(self):
         with self.app.app_context():
-            #user = self.userdata_store.create_user(email='prova@gmail.com', password='password')
             user = User(email='prova@gmail.com', username='prova', password='password')
             db.session.add(user)
             db.session.commit()

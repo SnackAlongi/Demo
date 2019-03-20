@@ -70,6 +70,9 @@ class Role(db.Model, RoleMixin):
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
 
+    def __str__(self):
+        return self.name
+
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -79,6 +82,9 @@ class User(db.Model, UserMixin):
     active = db.Column(db.Boolean())
     roles = db.relationship('Role', secondary='roles_users',
                          backref=db.backref('users', lazy='dynamic'))
+
+    def __str__(self):
+        return self.email
 
     def encode_auth_token(self):
         """
@@ -93,7 +99,7 @@ class User(db.Model, UserMixin):
             }
             return jwt.encode(
                 payload,
-                Config.SECRET,
+                Config.SECRET_KEY,
                 algorithm='HS256'
             )
         except Exception as e:
@@ -107,12 +113,10 @@ class User(db.Model, UserMixin):
         :return: integer|string
         """
         try:
-            payload = jwt.decode(auth_token, Config.SECRET)
+            payload = jwt.decode(auth_token, Config.SECRET_KEY)
             return payload['sub']
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
 
-    def __str__(self):
-        return self.username
